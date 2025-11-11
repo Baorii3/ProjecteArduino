@@ -17,11 +17,11 @@ publish_topic = "iticbcn/espnode01/pub"
 
 # DB
 DB_CONFIG = {
-    "host": "52.91.92.223",
+    "host": "localhost",
     "user": "server",
     "password": "pirineus",
     "database": "Control",
-    "port": 3306,
+    "port": 27090,
     "use_pure": True
 }
 
