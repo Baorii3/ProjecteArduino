@@ -76,12 +76,13 @@ def create_assistance(coditarjeta):
     try:
         cursor = connection.cursor()
         query = """
-            INSERT INTO ASISTENCIA (ID_ASISTENCIA, ID_TARGETA, ID_DISPOSITIU, ID_HORARI, Fecha, Estat)
-            Select 1, u.ID_TARGETA, 1, g.ID_HORARI, NOW(), 'Present'
+            INSERT INTO ASISTENCIA (ID_TARGETA, ID_DISPOSITIU, ID_HORARI, Fecha, Estat)
+            Select u.ID_TARGETA, 1, h.ID_HORARI, NOW(), 'PRESENT'
             from USUARI u 
             join TARGETA t on u.ID_TARGETA = t.ID_TARGETA
-            join USUARI_GRUP ug on u.ID_USUARI = ug.ID_USUARI
+            join USUARI_GRUP ug on u.ID_USER = ug.ID_USUARI
             join GRUP g on ug.ID_GRUP = g.ID_GRUP
+            JOIN HORARI h ON ug.ID_GRUP = h.ID_GRUP
             where t.CODI = %s
         """
         cursor.execute(query, (coditarjeta,))
