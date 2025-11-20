@@ -3,7 +3,7 @@ from mysql.connector import Error
 
 # DB
 DB_CONFIG = {
-    "host": "54.85.160.68",
+    "host": "3.95.60.9",
     "user": "server",
     "password": "pirineus",
     "database": "Control",
@@ -20,6 +20,25 @@ def create_connection():
         print(f"Error al conectar a la DB: {e}")
         return None
     
+# Consultar nom
+def query_name(coditarjeta):
+    connection = create_connection()
+    if connection is None:
+        print("No se pudo conectar a la DB")
+        return None
+    try:
+        cursor = connection.cursor()
+        query = "SELECT u.Nombre FROM USUARI u JOIN TARGETA t ON u.ID_TARGETA = t.ID_TARGETA WHERE t.CODI = %s"
+        cursor.execute(query, (coditarjeta,))
+        result = cursor.fetchone()
+        cursor.close()
+        if result:
+            return result[0]
+        else:
+            return None
+    finally:
+        connection.close()
+
 # Ejecutar consulta en la DB
 def execute_query(coditarjeta, client):
     connection = create_connection()

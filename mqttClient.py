@@ -1,7 +1,7 @@
 import os
 import paho.mqtt.client as mqtt
 import json
-from db import execute_query
+from db import execute_query, query_name
 
 # Configuración
 root_ca = os.path.join("D:\\Descargas", "AmazonRootCA1.pem")
@@ -36,11 +36,12 @@ def on_message(client, userdata, msg):
             coditarjeta = data["tagID"]
             num = execute_query(coditarjeta, client)
             if num == 1:
-                publish_message(client, {"status": "True"})
+                nombre = query_name(coditarjeta)
+                publish_message(client, {"status": "true", "nom":nombre})
             elif num == 0:
                 publish_message(client, {"status": "registered"})
             else:
-                publish_message(client, {"status": "False"})
+                publish_message(client, {"status": "false"})
         else:
             print("Campo 'tagID' no encontrado en el mensaje")
     except json.JSONDecodeError:

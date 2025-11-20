@@ -44,15 +44,21 @@ void CheckAWS(){
     client.loop();
   }
 }
+void handlerStatus(String status, String nombre=""){
+  if (status == "true"){
+    accesPermitido(nombre);
+  }else if (status == "registered"){
+    accesRegistrat();
+  }else {
+    accesDenegado();
+  }
+}
 
 void messageReceived(String &topic, String &payload){
   Serial.print("Mensaje recibido en topic: ");
   Serial.println(topic);
   Serial.print("Contenido: ");
   Serial.println(payload);
-
-  payload.replace("True", "true");
-  payload.replace("False", "false");
 
   StaticJsonDocument<200> doc;
   // Convertir el String a JSON
@@ -64,38 +70,36 @@ void messageReceived(String &topic, String &payload){
     return;
   }
   if (doc.containsKey("status")) {
-      bool status;
-    if (doc["status"].is<bool>()) {
-        status = doc["status"];
-    } else if (doc["status"].is<const char*>()) {
-        String s = doc["status"].as<const char*>();
-        s.toLowerCase();
-        status = (s == "true");
+    String status = "";
+    if (doc["status"].is<const char*>()) {
+        status = doc["status"].as<const char*>();
+        status.toLowerCase();
     }
-    handlerStatus(status);
+    handlerStatus(status, doc["nom"] | "");
   }
 }
 
-void handlerStatus(bool status){
-  if (status){
-    accesPermitido();
-  }else{
-    accesDenegado();
-  }
+void accesPermitido(String nombre){
+  lcd.clear();
+  lcd.print("Benvingut: ");
+  lcd.setCursor(0, 1);
+  lcd.print(nombre);
+  delay(2000);
+  lcd.clear();
 }
 
-void accesPermitido(){
-  digitalWrite(ledPinGreen,HIGH);
-  digitalWrite(ledPinRed,LOW);
-  delay(1000);
-  digitalWrite(ledPinGreen,LOW);
+void accesRegistrat(){
+  lcd.clear();
+  lcd.print("Acces registrat");
+  delay(2000);
+  lcd.clear();
 }
 
 void accesDenegado(){
-  digitalWrite(ledPinGreen,LOW);
-  digitalWrite(ledPinRed,HIGH);
-  delay(1000);
-  digitalWrite(ledPinRed,LOW);
+  lcd.clear();
+  lcd.print("Acces denegat");
+  delay(2000);
+  lcd.clear();
 }
 
 void PublicaTag(String tagID){
