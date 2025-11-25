@@ -3,7 +3,7 @@ from mysql.connector import Error
 
 # DB
 DB_CONFIG = {
-    "host": "3.95.60.9",
+    "host": "34.204.45.176",
     "user": "server",
     "password": "pirineus",
     "database": "Control",

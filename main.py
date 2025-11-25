@@ -1,5 +1,3 @@
-
-import paho.mqtt.client as mqtt
 from mqttClient import create_mqtt_client 
 
 mqtt_client = create_mqtt_client()
